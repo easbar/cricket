@@ -33,3 +33,7 @@ public
 /errorShots
 /old
 /build
+
+# IDE
+*.iml
+.idea
