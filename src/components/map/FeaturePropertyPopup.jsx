@@ -23,10 +23,7 @@ function renderProperties(feature) {
 
 function renderFeature(feature) {
   return <div key={feature.id}>
-    <div className="maputnik-popup-layer-id">{feature.layer['source-layer']}{feature.inspectModeCounter && <span> × {feature.inspectModeCounter}</span>}</div>
-    <InputBlock key={"property-type"} label={"$type"}>
-      <StringInput value={feature.geometry.type} style={{backgroundColor: 'transparent'}} />
-    </InputBlock>
+    <div className="maputnik-popup-layer-id">source-layer: {feature.layer['source-layer']}</div>
     {renderProperties(feature)}
   </div>
 }

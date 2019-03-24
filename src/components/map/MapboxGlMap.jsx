@@ -163,7 +163,7 @@ export default class MapboxGlMap extends React.Component {
         closeOnClick: false
       }),
       showMapPopup: true,
-      showMapPopupOnHover: false,
+      showMapPopupOnHover: true,
       showInspectMapPopupOnHover: true,
       showInspectButton: false,
       blockHoverPopupOnClick: true,
@@ -172,7 +172,8 @@ export default class MapboxGlMap extends React.Component {
       },
       buildInspectStyle: (originalMapStyle, coloredLayers) => buildInspectStyle(originalMapStyle, coloredLayers, this.props.highlightedLayer),
       renderPopup: features => {
-        if(this.props.inspectModeEnabled) {
+        const graphhopper = true;
+        if(this.props.inspectModeEnabled || graphhopper) {
           return renderPropertyPopup(features)
         } else {
           var mountNode = document.createElement('div');
