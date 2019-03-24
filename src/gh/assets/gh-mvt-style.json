@@ -74,14 +74,9 @@
       "type": "symbol",
       "source": "gh-mvt-tiles",
       "source-layer": "roads",
-      "filter": [
-        "==",
-        "$type",
-        "LineString"
-      ],
       "layout": {
         "symbol-placement": "line",
-        "text-field": "{name}",
+        "text-field": "{edgeId}",
         "text-font": [
           "Noto Sans Regular"
         ],
@@ -101,6 +96,48 @@
           ]
         },
         "text-transform": "uppercase"
+      },
+      "paint": {
+        "text-color": "#000",
+        "text-halo-color": "hsl(0, 0%, 100%)",
+        "text-halo-width": 2
+      }
+    },
+    {
+      "id": "gh_junctions",
+      "type": "circle",
+      "source": "gh-mvt-tiles",
+      "source-layer": "junctions",
+      "paint": {
+        "circle-color": "rgba(60, 21, 230, 1)",
+        "circle-radius": 2
+      }
+    },
+    {
+      "id": "gh_junctions_labels",
+      "type": "symbol",
+      "source": "gh-mvt-tiles",
+      "source-layer": "junctions",
+      "layout": {
+        "text-field": "{nodeId}",
+        "text-font": [
+          "Noto Sans Regular"
+        ],
+        "text-letter-spacing": 0.1,
+        "text-rotation-alignment": "map",
+        "text-size": {
+          "base": 1.4,
+          "stops": [
+            [
+              10,
+              8
+            ],
+            [
+              20,
+              14
+            ]
+          ]
+        }
       },
       "paint": {
         "text-color": "#000",
