@@ -1,5 +1,11 @@
 [
   {
+    "id": "gh-mvt-default",
+    "title": "Graphhopper",
+    "url": "http://localhost:8888/assets/gh-mvt-style.json",
+    "thumbnail": "http://localhost:8888/assets/gh_logo.png"
+  },
+  {
     "id": "klokantech-basic",
     "title": "Klokantech Basic",
     "url": "https://cdn.jsdelivr.net/gh/openmaptiles/klokantech-basic-gl-style@v1.8/style.json",

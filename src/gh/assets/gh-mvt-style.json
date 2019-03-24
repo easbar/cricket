@@ -1,0 +1,112 @@
+{
+  "version": 8,
+  "name": "gh-mvt",
+  "sources": {
+    "gh-mvt-tiles": {
+      "type": "vector",
+      "tiles": [
+        "http://localhost:8989/mvt/{z}/{x}/{y}.mvt"
+      ]
+    },
+    "mapbox": {
+      "type": "raster",
+      "url": "mapbox://mapbox.satellite",
+      "tileSize": 256
+    }
+  },
+  "glyphs": "https://free.tilehosting.com/fonts/{fontstack}/{range}.pbf?key={key}",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "rgb(239,239,239)"
+      }
+    },
+    {
+      "id": "satellite",
+      "type": "raster",
+      "source": "mapbox",
+      "source-layer": "mapbox_satellite_full"
+    },
+    {
+      "id": "gh_roads_big",
+      "type": "line",
+      "source": "gh-mvt-tiles",
+      "source-layer": "roads",
+      "filter": [
+        ">=",
+        "speed",
+        60
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-opacity": 0.6,
+        "line-color": "#dd504b",
+        "line-width": 2
+      }
+    },
+    {
+      "id": "gh_roads_small",
+      "type": "line",
+      "source": "gh-mvt-tiles",
+      "source-layer": "roads",
+      "filter": [
+        "<",
+        "speed",
+        60
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-opacity": 0.6,
+        "line-color": "#f7c913",
+        "line-width": 2
+      }
+    },
+    {
+      "id": "gh_roads_major_label",
+      "type": "symbol",
+      "source": "gh-mvt-tiles",
+      "source-layer": "roads",
+      "filter": [
+        "==",
+        "$type",
+        "LineString"
+      ],
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-font": [
+          "Noto Sans Regular"
+        ],
+        "text-letter-spacing": 0.1,
+        "text-rotation-alignment": "map",
+        "text-size": {
+          "base": 1.4,
+          "stops": [
+            [
+              10,
+              8
+            ],
+            [
+              20,
+              14
+            ]
+          ]
+        },
+        "text-transform": "uppercase"
+      },
+      "paint": {
+        "text-color": "#000",
+        "text-halo-color": "hsl(0, 0%, 100%)",
+        "text-halo-width": 2
+      }
+    }
+  ]
+}
