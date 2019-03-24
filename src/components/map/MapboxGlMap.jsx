@@ -14,6 +14,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import '../../mapboxgl.css'
 import '../../libs/mapbox-rtl'
 import MousePositionControl from "../../gh/mouse-position-control";
+import MapContextMenu from "../../gh/map-context-menu";
 
 
 const IS_SUPPORTED = MapboxGl.supported();
@@ -191,6 +192,19 @@ export default class MapboxGlMap extends React.Component {
       this.props.onDataChange({
         map: this.state.map
       })
+    })
+
+    map.on("contextmenu", e => {
+      const mountNode = document.createElement('div');
+      const popup = new MapboxGl.Popup({
+        closeOnClick: true,
+        closeButton: true
+      });
+      ReactDOM.render(<MapContextMenu point={e.lngLat} popup={popup}/>, mountNode);
+      popup
+        .setLngLat(e.lngLat)
+        .setDOMContent(mountNode)
+        .addTo(this.state.map);
     })
   }
 
