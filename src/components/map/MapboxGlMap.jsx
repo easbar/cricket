@@ -13,6 +13,7 @@ import { colorHighlightedLayer } from '../../libs/highlight'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import '../../mapboxgl.css'
 import '../../libs/mapbox-rtl'
+import MousePositionControl from "../../gh/mouse-position-control";
 
 
 const IS_SUPPORTED = MapboxGl.supported();
@@ -75,6 +76,9 @@ export default class MapboxGlMap extends React.Component {
     super(props)
     MapboxGl.accessToken = tokens.mapbox
     this.state = {
+      lng: 0,
+      lat: 0,
+      zoom: 0,
       map: null,
       inspect: null,
       isPopupOpen: false,
@@ -149,6 +153,9 @@ export default class MapboxGlMap extends React.Component {
 
     const nav = new MapboxGl.NavigationControl();
     map.addControl(nav, 'top-right');
+
+    const mousePosition = new MousePositionControl;
+    map.addControl(mousePosition, 'top-left');
 
     const inspect = new MapboxInspect({
       popup: new MapboxGl.Popup({
