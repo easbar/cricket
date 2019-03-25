@@ -44,7 +44,7 @@ class StringInput extends React.Component {
 
     return React.createElement(tag, {
       "data-wd-key": this.props["data-wd-key"],
-      spellCheck: !(tag === "input"),
+      spellCheck: false,
       className: classes.join(" "),
       style: this.props.style,
       value: this.state.value,
