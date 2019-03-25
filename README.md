@@ -1,167 +1,47 @@
-# Maputnik
+# Cricket
 
-[![Build Status](https://circleci.com/gh/maputnik/editor/tree/master.svg?style=shield)][circleci]
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/anelbgv6jdb3qnh9/branch/master?svg=true)][appveyor]
-[![Dependency Status](https://david-dm.org/maputnik/editor.svg)][dm-prod]
-[![Dev Dependency Status](https://david-dm.org/maputnik/editor/dev-status.svg)][dm-dev]
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)][license]
+A visualization and debugging tool for [graphhopper](http://www.graphhopper.com) forked from [maputnik](https://maputnik.gihtub.io/editor).
 
-[circleci]:    https://circleci.com/gh/maputnik/editor/tree/master
-[appveyor]:    https://ci.appveyor.com/project/lukasmartinelli/editor
-[dm-prod]:     https://david-dm.org/maputnik/editor
-[dm-dev]:      https://david-dm.org/maputnik/editor#info=devDependencies
-[license]:     https://tldrlegal.com/license/mit-license
+## Features
 
-<img width="200" align="right" alt="Maputnik" src="src/img/maputnik.png" />
-
-A free and open visual editor for the [Mapbox GL styles](https://www.mapbox.com/mapbox-gl-style-spec/)
-targeted at developers and map designers.
-
-- :link: Design your maps online at **<https://maputnik.github.io/editor/>** (all in local storage)
-- :link: Use the [Maputnik CLI](https://github.com/maputnik/editor/wiki/Maputnik-CLI) for local style development
-
-Mapbox has built one of the best and most amazing OSS ecosystems. A key component to ensure its longevity and independence is an OSS map designer.
-
-
-## Donations
-If you or your organisation has seen value from Maputnik, please consider donating at <https://maputnik.github.io/donate>
-
+ - render [mvt tiles]() served by the graphhopper to show the graphhopper routing graph in your browser
+ - adjust the [mvt style]() dynamically which allows you to highlight/filter roads by different properties, show them on the map etc. (this works
+   thanks to maputnik)
+ - hover graph to show popup with node/edge properties  
+ - jump to coordinate/edge-id/node-id (work in progress)
+ - show graphhopper routes on top of the graphhopper graph (work in progress)
+ - show results of coordinate snapping (query graph/location index) (work in progress)   
+ - copy coordinate to clipboard
 
 ## Documentation
 
-The documentation can be found in the [Wiki](https://github.com/maputnik/editor/wiki). You are welcome to collaborate!
+Cricket keeps basically all functionality of maputnik the same, so it is best to start with the documentation of 
+maputnik to understand what it does: [maputnik wiki](https://github.com/maputnik/editor/wiki).
 
-- :link: **Study the [Maputnik Wiki](https://github.com/maputnik/editor/wiki)**
-- :video_camera: Design a map from Scratch https://youtu.be/XoDh0gEnBQo
+Currently you need to start the graphhopper server with this [branch](https://github.com/easbar/graphhopper/tree/graphtool_mvt) 
+and it needs to be running on localhost:8989. Strictly speaking you do not need the graphhopper server running, but
+in this case there will not be much you can debug :) You also need to set `web.mvt.enabled: true` in your graphhopper
+configuration.
 
-[![Design Map from Scratch](https://j.gifs.com/g5XMgl.gif)](https://youtu.be/XoDh0gEnBQo)
+To start Cricket checkout this repository and switch to the `cricket` branch, then run `npm install` followed by 
+`npm run start`. You should see Cricket in your browser at `http://localhost:8888/`. For more details see the 
+maputnik documentation.
 
-## Develop
+Use standard maputnik features to adjust the graph visualization. By default the mapbox style is already setup to show
+the graphhopper graph, you can also choose the default via the 'Open' button after changing it, export your favorite
+style etc.
 
-Maputnik is written in ES6 and is using [React](https://github.com/facebook/react) and [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
+Hover the graph to show a popup containing edge/node metadata.
 
-We ensure building and developing Maputnik works with the [current active LTS Node.js version and above](https://github.com/nodejs/Release#release-schedule).
+Right click the graph to open a context menu with different actions.
 
-Install the deps, start the dev server and open the web browser on `http://localhost:8888/`.
+Right click-drag allows rotating/pitching the map (somewhat 'hidden' maputnik feature). 
+   
+## Contributing
 
-```bash
-# install dependencies
-npm install
-# start dev server
-npm start
-```
+Contributions are very welcome, but core maputnik changes should go directly to upstream.
 
-If you want Maputnik to be accessible externally use the [`--host` option](https://webpack.js.org/configuration/dev-server/#devserverhost):
-
-```bash
-# start externally accessible dev server
-npm start -- --host 0.0.0.0 
-```
-
-The build process will watch for changes to the filesystem, rebuild and autoreload the editor. However note this from the [webpack-dev-server docs](https://webpack.js.org/configuration/dev-server/):
-
-> webpack uses the file system to get notified of file changes. In some cases this does not work. For example, when using Network File System (NFS). Vagrant also has a lot of problems with this. ([snippet source](https://webpack.js.org/configuration/dev-server/#devserverwatchoptions-))
-
-To enable polling add `export WEBPACK_DEV_SERVER_POLLING=1` to your environment.
-
-```
-npm run build
-```
-
-Lint the JavaScript code.
-
-```
-# run linter
-npm run lint
-npm run lint-styles
-```
-
-
-## Tests
-For testing we use [webdriverio](http://webdriver.io) and [selenium-standalone](https://github.com/vvo/selenium-standalone)
-
-[selenium-standalone](https://github.com/vvo/selenium-standalone) starts a server that will launch browsers on your local machine. We use chrome so you **must** have chrome installed on your machine.
-
-Now open a terminal and run the following. This will install the drivers on your local machine
-
-```
-./node_modules/.bin/selenium-standalone install
-```
-
-Now start the standalone server
-
-```
-./node_modules/.bin/selenium-standalone start
-```
-
-Then open another terminal and run
-
-```
-npm test
-```
-
-After some time you should see a browser launch which will be automated by the test runner.
-
-
-## Related Projects
-
-- [maputnik-dev-server](https://github.com/nycplanning/labs-maputnik-dev-server) - An express.js server that allows for quickly loading the style from any mapboxGL map into mapuntnik. 
-
-## Sponsors
-
-Thanks to the supporters of the **[Kickstarter campaign](https://www.kickstarter.com/projects/174808720/maputnik-visual-map-editor-for-mapbox-gl)**. This project would not be possible without these commercial and individual sponsors.
-
-### Gold
-
-- [Wemap](https://getwemap.com/)
-- [Orbicon Informatik](https://www.orbiconinformatik.dk/)
-- [Terranodo](http://terranodo.io/)
-
-<a href="https://getwemap.com/">
-  <img width="33%" alt="Wemap" style="display:inline" src="media/sponsors/wemap.jpg" />
-</a>
-<a href="http://terranodo.io/">
-  <img width="33%" alt="Terranodo" style="display:inline" src="media/sponsors/terranodo.png" />
-</a>
-<a href="https://www.orbiconinformatik.dk/">
-  <img width="32%" alt="Terranodo" style="display:inline" src="media/sponsors/orbicon_informatik.png" />
-</a>
-
-<br/>
-
-### Silver
-
-- [Klokan Technologies](https://www.klokantech.com/)
-- [Geofabrik](http://www.geofabrik.de/)
-- [Dreipol](https://www.dreipol.ch/)
-
-<a href="https://www.klokantech.com/">
-  <img width="18%" alt="Klokan Technologies" style="display:inline-block" src="media/sponsors/klokantech.png" />
-</a>
-<a href="http://www.geofabrik.de/">
-  <img width="18%" alt="Geofabrik" style="display:inline-block" src="media/sponsors/geofabrik.png" />
-</a>
-<a href="https://www.dreipol.ch/">
-  <img width="18%" alt="Dreipol" style="display:inline-block" src="media/sponsors/dreipol.png" />
-</a>
-
-<br/>
-
-### Individuals
-
-**Influential Stakeholder**
-
-Alan McConchie, Odi, Mats Norén, Uli [geOps](http://geops.ch/), Helge Fahrnberger ([Toursprung](http://www.toursprung.com/)), Kirusanth Poopalasingam
-
-**Stakeholder**
-
-Brian Flood, Vasile Coțovanu, Andreas Kalkbrenner, Christian Mäder, Gregor Wassmann, Lee Armstrong, Rafel, Jon Burgess, Lukas Lehmann, Joachim Ungar, Alois Ackermann, Zsolt Ero, Jordan Meek
-
-**Supporter**
-
-Sina Martinelli, Nicholas Doiron, Neil Cawse, Urs42, Benedikt Groß, Manuel Roth, Janko Mihelić, Moritz Stefaner, Sebastian Ahoi, Juerg Uhlmann, Tom Wider, Nadia Panchaud, Oliver Snowden, Stephan Heuel, Tobin Bradley, Adrian Herzog, Antti Lehto, Pascal Mages, Marc Gehling, Imre Samu, Lauri K., Visahavel Parthasarathy, Christophe Waterlot-Buisine, Max Galka, ubahnverleih, Wouter van Dam, Jakob Lobensteiner, Samuel Kurath, Brian Bancroft
-
-## License
+## License (taken from maputnik)
 
 Maputnik is [licensed under MIT](LICENSE) and is Copyright (c) Lukas Martinelli and contributors.
 
