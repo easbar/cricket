@@ -4,7 +4,7 @@ A visualization and debugging tool for [graphhopper](http://www.graphhopper.com)
 
 ## Features
 
- - render [mvt tiles]() served by the graphhopper to show the graphhopper routing graph in your browser
+ - render [mvt tiles]() served by the graphhopper server to show the graphhopper routing graph in your browser
  - adjust the [mvt style]() dynamically which allows you to highlight/filter roads by different properties, show them on the map etc. (this works
    thanks to maputnik)
  - hover graph to show popup with node/edge properties  
