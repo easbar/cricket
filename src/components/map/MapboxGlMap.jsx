@@ -63,6 +63,7 @@ export default class MapboxGlMap extends React.Component {
     inspectModeEnabled: PropTypes.bool.isRequired,
     highlightedLayer: PropTypes.object,
     options: PropTypes.object,
+    menuActions: PropTypes.object,
   }
 
   static defaultProps = {
@@ -77,9 +78,9 @@ export default class MapboxGlMap extends React.Component {
     super(props)
     MapboxGl.accessToken = tokens.mapbox
     this.state = {
-      lng: 0,
-      lat: 0,
-      zoom: 0,
+      lng: 13.350032,
+      lat: 52.514476,
+      zoom: 14,
       map: null,
       inspect: null,
       isPopupOpen: false,
@@ -131,6 +132,11 @@ export default class MapboxGlMap extends React.Component {
       map.showCollisionBoxes = this.props.options.showCollisionBoxes;
       map.showOverdrawInspector = this.props.options.showOverdrawInspector;
     }
+
+    map.jumpTo({
+      center: this.props.options.center,
+      zoom: 14
+    });
   }
 
   componentDidMount() {
@@ -141,6 +147,7 @@ export default class MapboxGlMap extends React.Component {
       container: this.container,
       style: this.props.mapStyle,
       hash: true,
+      center: [this.state.lng,this.state.lat]
     }
 
     const map = new MapboxGl.Map(mapOpts);
@@ -195,13 +202,25 @@ export default class MapboxGlMap extends React.Component {
       })
     })
 
+    let popup;
     map.on("contextmenu", e => {
+      if (popup) {
+        popup.remove();
+      }
       const mountNode = document.createElement('div');
-      const popup = new MapboxGl.Popup({
+      popup = new MapboxGl.Popup({
         closeOnClick: true,
         closeButton: true
       });
-      ReactDOM.render(<MapContextMenu point={e.lngLat} popup={popup}/>, mountNode);
+      ReactDOM.render(<MapContextMenu
+        point={e.lngLat}
+        popup={popup}
+        menuActions={this.props.menuActions}
+        onCenterAtCoordinate={p => map.jumpTo({
+          center: p,
+          zoom: 14
+        })}
+      />, mountNode);
       popup
         .setLngLat(e.lngLat)
         .setDOMContent(mountNode)

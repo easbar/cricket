@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import {ToolsMode} from '../gh/tools-mode';
 
 import {MdFileDownload, MdOpenInBrowser, MdSettings, MdLayers, MdHelpOutline, MdFindInPage, MdAssignmentTurnedIn} from 'react-icons/md'
 
@@ -107,6 +108,7 @@ export default class Toolbar extends React.Component {
     children: PropTypes.node,
     onToggleModal: PropTypes.func,
     onSetMapState: PropTypes.func,
+    onSetToolsMode: PropTypes.func,
     mapState: PropTypes.string,
   }
 
@@ -122,6 +124,10 @@ export default class Toolbar extends React.Component {
 
   handleSelection(val) {
     this.props.onSetMapState(val);
+  }
+
+  handleMode(mode) {
+    this.props.onSetToolsMode(mode);
   }
 
   render() {
@@ -178,6 +184,12 @@ export default class Toolbar extends React.Component {
           </a>
         </div>
         <div className="maputnik-toolbar__actions">
+          <ToolbarSelect wdKey="nav:tools-mode">
+            <select onChange={(e) => this.handleMode(e.target.value)}>
+              <option key={ToolsMode.GRAPHHOPPER} value={ToolsMode.GRAPHHOPPER}>graphhopper</option>
+              <option key={ToolsMode.LAYERS} value={ToolsMode.LAYERS}>layers</option>
+            </select>
+          </ToolbarSelect>
           <ToolbarAction wdKey="nav:open" onClick={this.props.onToggleModal.bind(this, 'open')}>
             <MdOpenInBrowser />
             <IconText>Open</IconText>

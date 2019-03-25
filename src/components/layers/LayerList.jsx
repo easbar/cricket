@@ -43,7 +43,7 @@ class LayerListContainer extends React.Component {
 
   state = {
     collapsedGroups: {},
-    areAllGroupsExpanded: false,
+    areAllGroupsExpanded: true,
     isOpen: {
       add: false,
     }
@@ -78,8 +78,8 @@ class LayerListContainer extends React.Component {
     });
 
     this.setState({
-      collapsedGroups: newGroups,
-      areAllGroupsExpanded: !this.state.areAllGroupsExpanded
+      collapsedGroups: {},
+      areAllGroupsExpanded: true
     })
   }
 
@@ -112,8 +112,7 @@ class LayerListContainer extends React.Component {
   }
 
   isCollapsed(groupPrefix, idx) {
-    const collapsed = this.state.collapsedGroups[[groupPrefix, idx].join('-')]
-    return collapsed === undefined ? true : collapsed
+    return false;
   }
 
   render() {
@@ -168,16 +167,6 @@ class LayerListContainer extends React.Component {
       <header className="maputnik-layer-list-header">
         <span className="maputnik-layer-list-header-title">Layers</span>
         <span className="maputnik-space" />
-        <div className="maputnik-default-property">
-          <div className="maputnik-multibutton">
-            <button
-              id="skip-menu"
-              onClick={this.toggleLayers}
-              className="maputnik-button">
-              {this.state.areAllGroupsExpanded === true ? "Collapse" : "Expand"}
-            </button>
-          </div>
-        </div>
         <div className="maputnik-default-property">
           <div className="maputnik-multibutton">
             <button

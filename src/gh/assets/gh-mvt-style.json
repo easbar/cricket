@@ -110,7 +110,7 @@
       "source-layer": "junctions",
       "paint": {
         "circle-color": "rgba(60, 21, 230, 1)",
-        "circle-radius": 2
+        "circle-radius": 5
       }
     },
     {

@@ -39,7 +39,7 @@ $toolbar-offset: 0;
 @import 'map';
 @import 'react-collapse';
 @import 'react-codemirror';
-@import 'gh';
+@import '../gh/gh';
 
 /**
  * Hacks for webdriverio isVisibleWithinViewport

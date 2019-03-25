@@ -35,6 +35,8 @@ import Debug from '../libs/debug'
 import queryUtil from '../libs/query-util'
 
 import MapboxGl from 'mapbox-gl'
+import GraphhopperTools from "../gh/graphhopper-tools";
+import {ToolsMode} from "../gh/tools-mode";
 
 
 // Similar functionality as <https://github.com/mapbox/mapbox-gl-js/blob/7e30aadf5177486c2cfa14fe1790c60e217b5e56/src/util/mapbox.js>
@@ -195,6 +197,8 @@ export default class App extends React.Component {
       sources: {},
       vectorLayers: {},
       mapState: "map",
+      toolsMode: ToolsMode.GRAPHHOPPER,
+      ghToolsPoints: {},
       spec: latest,
       isOpen: {
         settings: false,
@@ -390,9 +394,24 @@ export default class App extends React.Component {
     this.onLayersChange(changedLayers)
   }
 
+  onGoToCoordinate = (latLng) => {
+    this.setState({
+      mapOptions: {
+        ...this.state.mapOptions,
+        center: [latLng.lng, latLng.lat]
+      }
+    })
+  }
+
   setMapState = (newState) => {
     this.setState({
       mapState: newState
+    })
+  }
+
+  setToolsMode = (toolsMode) => {
+    this.setState({
+      toolsMode: toolsMode
     })
   }
 
@@ -481,10 +500,17 @@ export default class App extends React.Component {
         {...mapProps}
       />
     } else {
+      const menuActions = {
+        onStartRoute : p => this.setState(state => state.ghToolsPoints.routingFrom = p),
+        onStopRoute : p =>  this.setState(state => state.ghToolsPoints.routingTo = p),
+        onSnapCoordinate : p => this.setState(state => state.ghToolsPoints.snapping = p),
+      }
       mapElement = <MapboxGlMap {...mapProps}
         inspectModeEnabled={this.state.mapState === "inspect"}
         highlightedLayer={this.state.mapStyle.layers[this.state.selectedLayerIndex]}
-        onLayerSelect={this.onLayerSelect} />
+        onLayerSelect={this.onLayerSelect}
+        menuActions={menuActions}
+      />
     }
 
     let filterName;
@@ -536,7 +562,13 @@ export default class App extends React.Component {
       onStyleChanged={this.onStyleChanged}
       onStyleOpen={this.onStyleChanged}
       onSetMapState={this.setMapState}
+      onSetToolsMode={this.setToolsMode}
       onToggleModal={this.toggleModal.bind(this)}
+    />
+
+    const graphhopperTools = <GraphhopperTools
+      ghToolsPoints={this.state.ghToolsPoints}
+      onGoToCoordinate={this.onGoToCoordinate}
     />
 
     const layerList = <LayerList
@@ -609,7 +641,9 @@ export default class App extends React.Component {
     </div>
 
     return <AppLayout
+      toolsMode={this.state.toolsMode}
       toolbar={toolbar}
+      graphhopperTools={graphhopperTools}
       layerList={layerList}
       layerEditor={layerEditor}
       map={this.mapRenderer()}
