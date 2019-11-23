@@ -78,9 +78,6 @@ export default class MapboxGlMap extends React.Component {
     super(props)
     MapboxGl.accessToken = tokens.mapbox
     this.state = {
-      lng: 13.350032,
-      lat: 52.514476,
-      zoom: 14,
       map: null,
       inspect: null,
       isPopupOpen: false,
@@ -99,8 +96,20 @@ export default class MapboxGlMap extends React.Component {
     if(!props.inspectModeEnabled) {
       //Mapbox GL now does diffing natively so we don't need to calculate
       //the necessary operations ourselves!
-      this.state.map.setStyle(props.mapStyle, { diff: true})
+      // todo: do this only when style actually changes otherwise there is a strong flickering while zooming/panning
+      // this.state.map.setStyle(props.mapStyle, { diff: true})
     }
+
+    // https://github.com/uber/react-map-gl/blob/master/src/mapbox/mapbox.js
+    // https://github.com/uber/react-map-gl/blob/master/src/components/static-map.js
+    const viewState = props.viewState;
+    const mapPosition = {
+      center: [viewState.longitude, viewState.latitude],
+      zoom: viewState.zoom,
+      bearing: viewState.bearing,
+      pitch: viewState.pitch
+    };
+    this.state.map.jumpTo(mapPosition);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -114,6 +123,7 @@ export default class MapboxGlMap extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('mapboxglmap did update', prevProps);
     if(!IS_SUPPORTED) return;
 
     const map = this.state.map;
@@ -132,14 +142,10 @@ export default class MapboxGlMap extends React.Component {
       map.showCollisionBoxes = this.props.options.showCollisionBoxes;
       map.showOverdrawInspector = this.props.options.showOverdrawInspector;
     }
-
-    map.jumpTo({
-      center: this.props.options.center,
-      zoom: 14
-    });
   }
 
   componentDidMount() {
+    console.log('mapboxglmap did mount');
     if(!IS_SUPPORTED) return;
 
     const mapOpts = {
@@ -147,7 +153,8 @@ export default class MapboxGlMap extends React.Component {
       container: this.container,
       style: this.props.mapStyle,
       hash: true,
-      center: [this.state.lng,this.state.lat]
+      // map interactions are done via deck layer
+      interactive: false
     }
 
     const map = new MapboxGl.Map(mapOpts);
@@ -217,6 +224,7 @@ export default class MapboxGlMap extends React.Component {
         popup={popup}
         menuActions={this.props.menuActions}
         onCenterAtCoordinate={p => map.jumpTo({
+          // todo!
           center: p,
           zoom: 14
         })}

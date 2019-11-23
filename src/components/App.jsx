@@ -4,7 +4,7 @@ import cloneDeep from 'lodash.clonedeep'
 import clamp from 'lodash.clamp'
 import {arrayMove} from 'react-sortable-hoc'
 import url from 'url'
-
+import DeckGL, {LineLayer} from 'deck.gl';
 import MapboxGlMap from './map/MapboxGlMap'
 import OpenLayersMap from './map/OpenLayersMap'
 import LayerList from './layers/LayerList'
@@ -209,6 +209,13 @@ export default class App extends React.Component {
         survey: localStorage.hasOwnProperty('survey') ? false : true
       },
       mapOptions: {
+        viewState: {
+          longitude: 13.350032,
+          latitude: 52.514476,
+          zoom: 14,
+          pitch: 0,
+          bearing: 0
+        },
         showTileBoundaries: queryUtil.asBool(queryObj, "show-tile-boundaries"),
         showCollisionBoxes: queryUtil.asBool(queryObj, "show-collision-boxes"),
         showOverdrawInspector: queryUtil.asBool(queryObj, "show-overdraw-inspector")
@@ -398,7 +405,12 @@ export default class App extends React.Component {
     this.setState({
       mapOptions: {
         ...this.state.mapOptions,
-        center: [latLng.lng, latLng.lat]
+        viewState: {
+          ...this.state.mapOptions.viewState,
+          longitude: latLng.lng,
+          latitude: latLng.lat,
+          zoom: 14
+        }
       }
     })
   }
@@ -505,12 +517,37 @@ export default class App extends React.Component {
         onStopRoute : p =>  this.setState(state => state.ghToolsPoints.routingTo = p),
         onSnapCoordinate : p => this.setState(state => state.ghToolsPoints.snapping = p),
       }
-      mapElement = <MapboxGlMap {...mapProps}
-        inspectModeEnabled={this.state.mapState === "inspect"}
-        highlightedLayer={this.state.mapStyle.layers[this.state.selectedLayerIndex]}
-        onLayerSelect={this.onLayerSelect}
-        menuActions={menuActions}
-      />
+
+      const data = [{sourcePosition: [-122.41669, 37.7853], targetPosition: [-122.41669, 37.781]}];
+      const layers = [
+        new LineLayer({id: 'line-layer', getColor: [255, 0, 0, 255], data})
+      ];
+
+      mapElement =
+        <DeckGL
+          controller={true} viewState={mapProps.options.viewState} initialViewState={this.state.mapOptions.viewState} onViewStateChange={(vs) => {
+          const state = {
+            mapOptions: {
+              ...this.state.mapOptions,
+              viewState: {
+                ...this.state.mapOptions.viewState,
+                latitude: vs.viewState.latitude,
+                longitude: vs.viewState.longitude,
+                zoom: vs.viewState.zoom,
+                bearing: vs.viewState.bearing,
+                pitch: vs.viewState.pitch,
+              },
+            }
+          };
+          this.setState(state)
+        }} layers={layers}>
+        <MapboxGlMap {...mapProps}
+                     inspectModeEnabled={this.state.mapState === "inspect"}
+                     highlightedLayer={this.state.mapStyle.layers[this.state.selectedLayerIndex]}
+                     onLayerSelect={this.onLayerSelect}
+                     menuActions={menuActions}
+        />
+       </DeckGL>
     }
 
     let filterName;

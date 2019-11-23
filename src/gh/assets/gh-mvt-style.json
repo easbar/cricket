@@ -95,6 +95,8 @@
             ]
           ]
         },
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
         "text-transform": "uppercase"
       },
       "paint": {
@@ -139,6 +141,8 @@
           ]
         }
       },
+      "icon-allow-overlap": true,
+      "icon-ignore-placement": true,
       "paint": {
         "text-color": "#000",
         "text-halo-color": "hsl(0, 0%, 100%)",
